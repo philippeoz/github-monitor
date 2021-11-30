@@ -29,15 +29,20 @@ class GitHub(requests.Session):
         )
 
     @staticmethod
-    def error_handler(response):
+    def response_handler(response):
         """GitHub error handler method
 
         Args:
             response (Response): response instance
 
         Raises:
-            GitHubError: Exception with some response description
+            RepositoryNotFoundException: when repo not found (404)
+            GitHubError: With some reponse data if status os not 200 or 404
         """
+        if response.status_code == 200:
+            return response
+        if response.status_code == 404:
+            raise RepositoryNotFoundException(**response.json())
         raise GitHubError(
             f"status: {response.status_code} - content: {response.content}"
         )
@@ -50,19 +55,30 @@ class GitHub(requests.Session):
             username (str): github username
             repository_name (str): github repository name
 
-        Raises:
-            RepositoryNotFoundException: when repo not found (404)
-            GitHubError: With some reponse data if status os not 200 or 404
-
         Returns:
             dict: repository data
         """
-        session = cls()
-        response = session.get(f"repos/{username}/{repository_name}")
+        response = cls().get(f"repos/{username}/{repository_name}")
+        return cls.response_handler(response).json()
 
-        if response.status_code == 200:
-            return response.json()
-        if response.status_code == 404:
-            raise RepositoryNotFoundException(**response.json())
+    @classmethod
+    def repository_commits(cls, username, repository_name, **query_params):
+        """
+        Get repository commits list/data
+        Extra args will be parsed to request url query string
 
-        return cls.error_handler(response)
+        Args:
+            username (str): github username
+            repository_name (str): github repository name
+
+        Returns:
+            dict: repository commits list and pagination data
+        """
+        response = cls().get(
+            f"repos/{username}/{repository_name}/commits", params=query_params
+        )
+        response_checked = cls.response_handler(response)
+        return {
+            "results": response_checked.json(),
+            "pagination": response.links
+        }

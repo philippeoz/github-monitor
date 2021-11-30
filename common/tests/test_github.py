@@ -60,16 +60,20 @@ def test_github_repository_not_found(monkeypatch, github_session):
 
 
 @pytest.mark.parametrize(
-    'status, exception', [
-        ('not_found', github.RepositoryNotFoundException),
-        ('bad', github.GitHubError),
-        ('service_unavailable', github.GitHubError),
+    'method, status, exception', [
+        ('repository', 'not_found', github.RepositoryNotFoundException),
+        ('repository', 'bad', github.GitHubError),
+        ('repository', 'service_unavailable', github.GitHubError),
+        ('repository_commits', 'not_found', github.RepositoryNotFoundException),
+        ('repository_commits', 'bad', github.GitHubError),
+        ('repository_commits', 'service_unavailable', github.GitHubError),
     ]
 )
-def test_github_repository_error(status, exception, monkeypatch, github_session):
+def test_github_repository_methods_errors(method, status, exception, monkeypatch, github_session):
     """Test repository request with some mocked errors
 
     Args:
+        method (str): GitHub method to call
         status (str): status_code names (requests.status_codes.codes pattern)
         exception (Exception): exception to test the error handler
         monkeypatch (MonkeyPatch): pytext monkeypatch fixture
@@ -89,11 +93,11 @@ def test_github_repository_error(status, exception, monkeypatch, github_session)
     monkeypatch.setattr(requests.Session, "get", mock_error_response)
 
     with pytest.raises(exception):
-        github_session.repository("foo", "bar")
+        getattr(github_session, method)("foo", "bar")
 
 
 def test_github_repository_success(monkeypatch, github_session):
-    """Test repository request with some mocked errors
+    """Test repository request with mocked success response
 
     Args:
         monkeypatch (MonkeyPatch): pytext monkeypatch fixture
@@ -113,3 +117,37 @@ def test_github_repository_success(monkeypatch, github_session):
 
     monkeypatch.setattr(requests.Session, "get", mock_error_response)
     assert github_session.repository("foo", "bar") == expected_data
+
+
+def test_github_repository_commits_success(monkeypatch, github_session):
+    """Test repository_commits request mocked success response
+
+    Args:
+        monkeypatch (MonkeyPatch): pytext monkeypatch fixture
+        github_session (GitHub): GitHub instance fixture
+    """
+    expected_data = [{"author": "niceguy"}, {"author": "someone"}]
+
+    link = "http://awesome/url"
+    mock_links = f"<{link}>; rel=\"next\", <{link}>; rel=\"last\""
+
+    expected_pagination = {
+        "next": {"url": "http://awesome/url", "rel": "next"},
+        "last": {"url": "http://awesome/url", "rel": "last"}
+    }
+
+    def mock_error_response(*args, **kwargs):
+        response = requests.Response()
+        response.status_code = requests.status_codes.codes.get('ok')
+        response.headers.update({"link": mock_links})
+        setattr(
+            response, "_content", requests.compat.json.dumps(
+                expected_data
+            ).encode()
+        )
+        return response
+
+    monkeypatch.setattr(requests.Session, "get", mock_error_response)
+    response_data = github_session.repository_commits("foo", "bar")
+    assert response_data.get("results") == expected_data
+    assert response_data.get("pagination") == expected_pagination
