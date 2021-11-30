@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     'repositories.apps.RepositoriesConfig',
 ]
 
+if DEBUG is True:
+    INSTALLED_APPS.append('django_extensions')
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
