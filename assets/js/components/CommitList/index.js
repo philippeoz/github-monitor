@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const CommitList = (props) => {
-  const {commits} = props;
+  const { commits } = props;
   return (
     <div>
       {commits.length !== 0 && (

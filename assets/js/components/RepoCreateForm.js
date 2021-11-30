@@ -1,33 +1,36 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Field, reduxForm} from 'redux-form';
+import { Field, reduxForm } from 'redux-form';
 
 const renderField = ({
-  input, placeholder, className, type, meta: {touched, error, invalid},
+  input, placeholder, className, type, meta: { touched, error, invalid },
 }) => (
-    <div>
-      <input
-        {...input}
-        placeholder={placeholder}
-        className={`${className} ${touched && invalid ? 'is-invalid' : ''}`}
-        type={type}
-      />
-      {touched
-        && ((error && (
-          <div className="invalid-feedback">
-            {error}
-          </div>
-        )))
-      }
-    </div>
-  );
+  <div>
+    <input
+      name={input.name}
+      placeholder={placeholder}
+      className={`${className} ${touched && invalid ? 'is-invalid' : ''}`}
+      type={type}
+    />
+    {touched
+      && ((error && (
+        <div className="invalid-feedback">
+          {error}
+        </div>
+      )))}
+  </div>
+);
 
 renderField.propTypes = {
-  input: PropTypes.object.isRequired,
+  input: PropTypes.shape({ name: PropTypes.string }).isRequired,
   placeholder: PropTypes.string.isRequired,
   className: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
-  meta: PropTypes.object.isRequired,
+  meta: PropTypes.shape({
+    touched: PropTypes.bool,
+    error: PropTypes.string,
+    invalid: PropTypes.bool,
+  }).isRequired,
 };
 
 const RepoCreateForm = (props) => {
@@ -72,7 +75,7 @@ RepoCreateForm.propTypes = {
 };
 
 const validate = (values) => {
-  const {username} = document.getElementById('main').dataset;
+  const { username } = document.getElementById('main').dataset;
   const errors = {};
   if (!values.name || !values.name.startsWith(`${username}/`)) {
     errors.name = `Repository must belong to you (eg: ${username}/repo-name)`;
