@@ -17,3 +17,7 @@ class GitHub(requests.Session):
         return super().request(
             method, urljoin(GitHub.BASE_URL, path), **kwargs
         )
+
+    @staticmethod
+    def repository():
+        pass

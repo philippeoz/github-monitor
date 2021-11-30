@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
 
 const renderField = ({
-  input, placeholder, className, type, meta: { touched, error, invalid },
+  input: { name, value }, placeholder, className, type, meta: { touched, error, invalid },
 }) => (
   <div>
     <input
-      name={input.name}
+      name={name}
+      value={value}
       placeholder={placeholder}
       className={`${className} ${touched && invalid ? 'is-invalid' : ''}`}
       type={type}
@@ -22,7 +23,10 @@ const renderField = ({
 );
 
 renderField.propTypes = {
-  input: PropTypes.shape({ name: PropTypes.string }).isRequired,
+  input: PropTypes.shape({
+    name: PropTypes.string,
+    value: PropTypes.string,
+  }).isRequired,
   placeholder: PropTypes.string.isRequired,
   className: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
