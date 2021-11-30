@@ -5,3 +5,4 @@ node_modules
 webpack-stats.json
 assets/bundles/
 .python-version
+.pytest_cache

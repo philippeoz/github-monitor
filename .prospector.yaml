@@ -15,10 +15,15 @@ pep8:
     max-line-length: 100
 
 pylint:
+  load-plugins:
+    - pylint_django
   disable:
     - invalid-name
     - wrong-import-order
+    - arguments-differ
   options:
+    django-settings-module: githubmonitor.settings
+    load-plugins: pylint_django
     max-line-length: 100
 
 dodgy:

@@ -1,15 +1,14 @@
-import pytest
-
+from unittest.mock import patch
 from urllib.parse import urljoin
 
-from unittest.mock import patch
+import pytest
 
 from common.integrations import github
 
 
-@pytest.fixture
-def github_session():
-    """GitHub Session fixture
+@pytest.fixture(name="github_session")
+def github_session_instance_fixture():
+    """Create a instance of GitHub Session as a fixture
 
     Returns:
         Session: Github Session instance
