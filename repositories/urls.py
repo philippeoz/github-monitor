@@ -1,10 +1,15 @@
-from django.urls import path
+from django.urls import path, include
 
-from .views import commit_list_view, repository_create_view
+from rest_framework.routers import DefaultRouter
+
+from .views import RepositoryViewSet, CommitViewSet
 
 app_name = 'repositories'
 
+router = DefaultRouter()
+router.register('repositories', RepositoryViewSet)
+router.register('commits', CommitViewSet)
+
 urlpatterns = [
-    path('api/commits/', commit_list_view, name='commits-list'),
-    path('api/repositories/', repository_create_view, name='repositories-create'),
+    path('api/', include(router.urls))
 ]

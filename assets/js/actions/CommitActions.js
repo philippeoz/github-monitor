@@ -1,11 +1,16 @@
 import * as types from './ActionTypes';
 
-export const createRepositorySuccess = (response, successMessage) => ({
+export const createRepositorySuccess = (response, errorMessages) => ({
   type: types.CREATE_REPOSITORY_SUCCESS,
-  payload: {response, successMessage},
+  payload: { response, errorMessages },
 });
 
-export const getCommitsSuccess = commits => ({
+export const getRepositorySuccess = (repositories) => ({
+  type: types.GET_REPOSITORY_SUCCESS,
+  payload: repositories,
+});
+
+export const getCommitsSuccess = (commits) => ({
   type: types.GET_COMMITS_SUCCESS,
   payload: commits,
 });

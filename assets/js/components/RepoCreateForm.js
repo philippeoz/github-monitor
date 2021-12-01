@@ -41,14 +41,20 @@ renderField.propTypes = {
 
 const RepoCreateForm = (props) => {
   const {
-    successMessage, handleSubmit, pristine, submitting,
+    errorMessages, handleSubmit, pristine, submitting,
   } = props;
   return (
     <div>
-      {successMessage
+      {errorMessages === false
         && (
           <div className="alert alert-success" role="alert">
             Repository added successfully!
+          </div>
+        )}
+      {!!errorMessages && errorMessages.length
+        && (
+          <div className="alert alert-danger" role="alert">
+            { errorMessages.map((error) => (<span key={error}>{error}</span>)) }
           </div>
         )}
       <form onSubmit={handleSubmit}>
@@ -63,7 +69,7 @@ const RepoCreateForm = (props) => {
             />
           </div>
           <div className="col-2">
-            <button disabled={pristine || submitting} className="btn btn-block btn-primary" type="submit">
+            <button disabled={pristine || submitting} className="btn btn-block btn-dark" type="submit">
               Submit
             </button>
           </div>
@@ -73,11 +79,15 @@ const RepoCreateForm = (props) => {
   );
 };
 
+RepoCreateForm.defaultProps = {
+  errorMessages: null,
+};
+
 RepoCreateForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   pristine: PropTypes.bool.isRequired,
   submitting: PropTypes.bool.isRequired,
-  successMessage: PropTypes.bool.isRequired,
+  errorMessages: PropTypes.arrayOf(PropTypes.string),
 };
 
 const validate = (values) => {

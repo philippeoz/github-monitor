@@ -1,3 +1,33 @@
+.page-item.active .page-link {
+  background-color: #343a40;
+  border-color: #343a40;
+}
+
+.page-item .page-link,
+.page-link:hover,
+.page-link {
+  color: #343a40;
+}
+
+.page-item.disabled .page-link {
+  color: #c0c0c0;
+}
+
+.page-link:focus {
+  box-shadow: 0 0 0 0.2rem rgb(126 126 126 / 25%);
+}
+
+.github-logo {
+  color: #999999;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+  margin-bottom: 5px;
+  margin-left: 25px;
+}
+
+
 .avatar {
   float: left;
   margin-right: 15px;
@@ -79,10 +109,10 @@ body {
   color: #999999;
 }
 
-.sidebar-nav li a:hover {
+.sidebar-nav li a:hover,
+.github-logo {
   text-decoration: none;
   color: #fff;
-  background: rgba(255, 255, 255, 0.2);
 }
 
 .sidebar-nav li a:active, .sidebar-nav li a:focus {
@@ -95,6 +125,12 @@ body {
   line-height: 60px;
 }
 
+.sidebar-nav>.sidebar-brand .main {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px #999999 solid;
+}
+
 .sidebar-nav>.sidebar-brand a {
   color: #999999;
 }
@@ -104,7 +140,11 @@ body {
   background: none;
 }
 
-@media(min-width:768px) {
+#wrapper.toggled #sidebar-wrapper {
+  width: 0px;
+}
+
+@media(min-width: 768px) {
   #wrapper {
     padding-left: 0;
   }
