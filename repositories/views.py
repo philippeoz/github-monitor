@@ -18,7 +18,9 @@ def commit_list_view(request):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def repository_create_view(request):
-    serializer = RepositorySerializer(data=request.data)
+    serializer = RepositorySerializer(
+        data=request.data, context={'request': request}
+    )
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(serializer.data, status=status.HTTP_201_CREATED)
