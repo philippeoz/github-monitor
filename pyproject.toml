@@ -20,6 +20,7 @@ requests = "2.24.0"
 social-auth-app-django = "3.4.0"
 social-auth-core = "3.3.3"
 celery = "^5.2.1"
+django-filter = "^21.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"

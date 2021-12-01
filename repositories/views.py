@@ -1,3 +1,4 @@
+from django_filters import rest_framework as rest_filters
 from rest_framework import mixins, viewsets
 from rest_framework.permissions import IsAuthenticated
 
@@ -24,3 +25,5 @@ class CommitViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Commit.objects.all()
     serializer_class = CommitSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = (rest_filters.DjangoFilterBackend,)
+    filterset_fields = ('repository__name', 'author')

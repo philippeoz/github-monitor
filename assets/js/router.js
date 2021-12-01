@@ -28,7 +28,7 @@ const RouterComponent = () => {
           <div className="container-fluid">
             <div className="row" style={{ flexWrap: 'nowrap' }}>
               <div className="col-1" style={{ maxWidth: 50 }}>
-                <button type="button" className="btn btn-outline-dark" onClick={toggleClass}>
+                <button type="button" className="btn btn-dark" onClick={toggleClass}>
                   ☰
                 </button>
               </div>

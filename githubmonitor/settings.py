@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'webpack_loader',
     'common.apps.CommonConfig',
     'repositories.apps.RepositoriesConfig',
+    'django_filters',
 ]
 
 if DEBUG is True:

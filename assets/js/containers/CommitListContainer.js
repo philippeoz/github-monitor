@@ -23,11 +23,12 @@ class CommitListContainer extends React.Component {
   }
 
   render() {
-    const { commits } = this.props;
+    const { commits, filterParams } = this.props;
     return (
       <CommitList
         ref={this.commitsContainer}
         commits={commits}
+        filterParams={filterParams}
       />
     );
   }
@@ -35,11 +36,12 @@ class CommitListContainer extends React.Component {
 
 CommitListContainer.propTypes = {
   commits: PropTypes.arrayOf(PropTypes.object).isRequired,
+  filterParams: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 const mapStateToProps = (store) => ({
   commits: store.commitState.commits,
-  commitsPagination: store.commitState.commits_pagination,
+  filterParams: store.commitState.params,
 });
 
 export default connect(mapStateToProps)(CommitListContainer);

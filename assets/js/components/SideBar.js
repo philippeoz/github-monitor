@@ -31,7 +31,7 @@ const SideBar = (props) => {
       </li>
       {repositories.map(({ name: repo }) => (
         <li key={repo}>
-          <Link to={`/?page=1&repository=${repo}`}>{repo}</Link>
+          <Link to={`/?repository__name=${repo}`}>{repo}</Link>
         </li>
       ))}
     </ul>

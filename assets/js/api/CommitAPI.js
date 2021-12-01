@@ -6,8 +6,9 @@ import {
 } from '../actions/CommitActions';
 
 export const getCommits = (params) => {
-  const getParams = Object.keys(params).length ? params : { page: 1 };
-
+  const getParams = Object.keys(params).length ? {
+    ...params, page: params.page || 1,
+  } : { page: 1 };
   return axios.get('/api/commits/', { params: getParams })
     .then((response) => {
       store.dispatch(getCommitsSuccess({

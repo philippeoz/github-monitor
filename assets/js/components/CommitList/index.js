@@ -1,20 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import PaginateComponent from '../Pagination';
 import * as commitAPI from '../../api/CommitAPI';
 
 const CommitList = React.forwardRef((props, ref) => {
-  const { commits } = props;
-
+  const { commits, filterParams } = props;
   const url = window.location.href;
 
   React.useEffect(() => {
-    commitAPI.getCommits(
-      Object.fromEntries([
-        ...(new URL(url)).searchParams.entries(),
-      ]),
-    );
+    const urlQueryData = Object.fromEntries([
+      ...(new URL(url)).searchParams.entries(),
+    ]);
+    commitAPI.getCommits(urlQueryData);
   }, [url]);
+
+  const updateQueryString = (filter, value) => {
+    const searchParams = new URLSearchParams(window.location.search);
+    searchParams.set(filter, value);
+    searchParams.set('page', '1');
+    return `/?${searchParams.toString()}`;
+  };
 
   return (
     <div>
@@ -25,6 +31,11 @@ const CommitList = React.forwardRef((props, ref) => {
           >
             <div className="card-header">
               Commit List
+              {Object.keys(filterParams).filter((field) => field !== 'page').map((field) => (
+                <span className="badge badge-dark float-right mt-1 mr-1">
+                  {`${field.includes('author') ? 'author' : 'repository'}: ${filterParams[field]}`}
+                </span>
+              ))}
             </div>
 
             <div
@@ -42,7 +53,9 @@ const CommitList = React.forwardRef((props, ref) => {
                       {commit.message}
                     </p>
                     <small className="text-muted">
-                      {commit.author}
+                      <Link to={updateQueryString('author', commit.author)}>
+                        {commit.author}
+                      </Link>
                       {' '}
                       authored
                       {' '}
@@ -69,6 +82,7 @@ const CommitList = React.forwardRef((props, ref) => {
 
 CommitList.propTypes = {
   commits: PropTypes.arrayOf(PropTypes.object).isRequired,
+  filterParams: PropTypes.objectOf(PropTypes.any).isRequired,
 };
 
 export default CommitList;

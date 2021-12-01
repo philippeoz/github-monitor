@@ -29,25 +29,31 @@ const PaginateComponent = (props) => {
   return (
     <nav aria-label="Page navigation example">
       <ul className="pagination justify-content-center mb-0">
-        <li className={`page-item ${previous ? null : 'disabled'}`}>
+        <li className={`page-item ${previous ? '' : 'disabled'}`}>
           <Link className="page-link" to={mountPath(previous)}>❮</Link>
         </li>
-        <li className={`page-item ${first === pageInt ? 'active' : null}`}>
+        <li className={`page-item ${first === pageInt ? 'active' : ''}`}>
           <Link className="page-link" to={mountPath(first)}>
             { first }
           </Link>
         </li>
-        <li className={`page-item ${second === pageInt ? 'active' : null}`}>
+        <li className={
+          `page-item ${second > pageInt && !next ? 'disabled' : ''} ${second === pageInt ? 'active' : ''}`
+          }
+        >
           <Link className="page-link" to={mountPath(second)}>
             { second }
           </Link>
         </li>
-        <li className={`page-item ${third === pageInt ? 'active' : null}`}>
+        <li className={
+          `page-item ${third > pageInt && !next ? 'disabled' : ''} ${third === pageInt ? 'active' : ''}`
+          }
+        >
           <Link className="page-link" to={mountPath(third)}>
             { third }
           </Link>
         </li>
-        <li className={`page-item ${next ? null : 'disabled'}`}>
+        <li className={`page-item ${next ? '' : 'disabled'}`}>
           <Link className="page-link" to={mountPath(next)}>❯</Link>
         </li>
       </ul>
