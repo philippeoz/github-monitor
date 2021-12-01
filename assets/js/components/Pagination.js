@@ -26,8 +26,6 @@ const PaginateComponent = (props) => {
     [first, second, third] = [pageInt - 1, pageInt, pageInt + 1];
   }
 
-  console.log([first, second, third], page);
-
   return (
     <nav aria-label="Page navigation example">
       <ul className="pagination justify-content-center mb-0">

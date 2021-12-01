@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
+import { Link } from 'react-router-dom';
 
 const renderField = ({
   input: { name, value, onChange }, placeholder, className, type, meta: { touched, error, invalid },
@@ -43,21 +44,33 @@ const RepoCreateForm = (props) => {
   const {
     errorMessages, handleSubmit, pristine, submitting,
   } = props;
+
+  const [errorToggled, setErrorToggled] = React.useState(false);
+  const [successToggled, setSuccessToggled] = React.useState(false);
+  const { username } = document.getElementById('main').dataset;
+
+  const usernamePrefix = (value) => {
+    const defaultValue = `${username}/`;
+    if (!value) return value;
+    return `${defaultValue}${value.split('/').slice(1).join()}`;
+  };
+
+  const toggleErrorDialog = () => {
+    setErrorToggled(!errorToggled);
+  };
+
+  const toggleSucessDialog = () => {
+    setSuccessToggled(!successToggled);
+  };
+
+  React.useEffect(() => {
+    const dialog = !errorMessages ? setSuccessToggled : setErrorToggled;
+    dialog(true);
+  }, [errorMessages]);
+
   return (
     <div>
-      {errorMessages === false
-        && (
-          <div className="alert alert-success" role="alert">
-            Repository added successfully!
-          </div>
-        )}
-      {!!errorMessages && errorMessages.length
-        && (
-          <div className="alert alert-danger" role="alert">
-            { errorMessages.map((error) => (<span key={error}>{error}</span>)) }
-          </div>
-        )}
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} id="repoForm">
         <div className="form-row">
           <div className="col-10">
             <Field
@@ -66,6 +79,7 @@ const RepoCreateForm = (props) => {
               className="form-control"
               component={renderField}
               type="text"
+              normalize={usernamePrefix}
             />
           </div>
           <div className="col-2">
@@ -75,6 +89,30 @@ const RepoCreateForm = (props) => {
           </div>
         </div>
       </form>
+      {errorMessages === false
+        && (
+          <div className={`alert-overlay ${successToggled && 'alert-overlay-toggle'}`}>
+            <div className="popup text-success">
+              <h4 className="text-success">Success!</h4>
+              <button type="button" className="close text-success" onClick={toggleSucessDialog}>×</button>
+              <div className="content">
+                Repository added successfully!
+              </div>
+            </div>
+          </div>
+        )}
+      {!!errorMessages && errorMessages.length
+        && (
+          <div className={`alert-overlay ${errorToggled && 'alert-overlay-toggle'}`}>
+            <div className="popup text-danger">
+              <h4 className="text-danger">Error!</h4>
+              <button type="button" className="close text-danger" onClick={toggleErrorDialog}>×</button>
+              <div className="content">
+                { errorMessages.map((error) => (<span key={error}>{error}</span>)) }
+              </div>
+            </div>
+          </div>
+        )}
     </div>
   );
 };

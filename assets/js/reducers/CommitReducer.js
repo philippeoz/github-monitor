@@ -40,7 +40,15 @@ const commitReducer = (state = initialState, action) => {
         },
       };
     case types.CREATE_REPOSITORY_SUCCESS: {
-      return { ...state, errorMessages: action.payload.errorMessages };
+      return {
+        ...state,
+        repositories: action.payload.errorMessages.length ? [
+          ...state.repositories,
+        ] : [
+          ...state.repositories, action.payload.response,
+        ],
+        errorMessages: action.payload.errorMessages,
+      };
     }
     default:
       return state;
