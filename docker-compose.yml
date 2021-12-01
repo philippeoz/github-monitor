@@ -20,7 +20,7 @@ services:
 
   worker:
     build: .
-    command: celery worker --app=githubmonitor --loglevel=info
+    command: celery --app githubmonitor worker --loglevel=info
     volumes:
       - .:/app/
     env_file: .env
