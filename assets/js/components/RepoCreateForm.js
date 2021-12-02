@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Field, reduxForm } from 'redux-form';
-import { Link } from 'react-router-dom';
 
 const renderField = ({
   input: { name, value, onChange }, placeholder, className, type, meta: { touched, error, invalid },
